@@ -49,4 +49,29 @@ public class PersonService {
         return person.getId();
     }
 
+    public void delete(UUID id){
+        Optional<Person> personOptional = personRepository.findById(id);
+        if (!personOptional.isPresent()) {
+            LOGGER.error("Person with id {} was not found in db", id);
+            throw new ResourceNotFoundException(Person.class.getSimpleName() + " with id: " + id);
+        }
+        personRepository.delete(personOptional.get());
+    }
+
+    public Person update(UUID id, String address, String name){
+        Optional<Person> personOptional = personRepository.findById(id);
+        if (!personOptional.isPresent()) {
+            LOGGER.error("Person with id {} was not found in db", id);
+            throw new ResourceNotFoundException(Person.class.getSimpleName() + " with id: " + id);
+        }
+        personRepository.update(id,address,name);
+        Optional<Person> updatedPersonOptional = personRepository.findById(id);
+        if (!updatedPersonOptional.isPresent()) {
+            LOGGER.error("Person with id {} was not found in db", id);
+            throw new ResourceNotFoundException(Person.class.getSimpleName() + " with id: " + id);
+        }
+        return updatedPersonOptional.get();
+
+    }
+
 }

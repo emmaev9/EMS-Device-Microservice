@@ -1,6 +1,7 @@
 package ro.tuc.ds2020.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ro.tuc.ds2020.entities.Person;
@@ -24,5 +25,9 @@ public interface PersonRepository extends JpaRepository<Person, UUID> {
             "WHERE p.name = :name " +
             "AND p.age >= 60  ")
     Optional<Person> findSeniorsByName(@Param("name") String name);
+
+    @Modifying
+    @Query(value = "UPDATE Person p SET p.name = :name, p.address = :address WHERE p.id = :id")
+    void update(@Param("id")UUID id, @Param("name")String name, @Param("address")String address);
 
 }

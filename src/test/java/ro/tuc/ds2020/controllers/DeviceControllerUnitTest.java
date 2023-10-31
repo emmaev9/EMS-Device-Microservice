@@ -7,7 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ro.tuc.ds2020.Ds2020TestConfig;
 import ro.tuc.ds2020.dtos.PersonDetailsDTO;
-import ro.tuc.ds2020.services.PersonService;
+import ro.tuc.ds2020.services.DeviceService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,7 +18,7 @@ public class PersonControllerUnitTest extends Ds2020TestConfig {
     private MockMvc mockMvc;
 
     @MockBean
-    private PersonService service;
+    private DeviceService service;
 
     @Test
     public void insertPersonTest() throws Exception {

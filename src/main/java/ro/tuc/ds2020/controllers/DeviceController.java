@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.tuc.ds2020.dtos.PersonDTO;
 import ro.tuc.ds2020.dtos.PersonDetailsDTO;
-import ro.tuc.ds2020.entities.Person;
-import ro.tuc.ds2020.services.PersonService;
+import ro.tuc.ds2020.dtos.UpdatePersonDTO;
+import ro.tuc.ds2020.entities.Device;
+import ro.tuc.ds2020.services.DeviceService;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -23,10 +25,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping(value = "/person")
 public class PersonController {
 
-    private final PersonService personService;
+    private final DeviceService personService;
 
     @Autowired
-    public PersonController(PersonService personService) {
+    public PersonController(DeviceService personService) {
         this.personService = personService;
     }
 
@@ -42,7 +44,7 @@ public class PersonController {
     }
 
     @PostMapping()
-    public ResponseEntity<UUID> insertProsumer(@Valid @RequestBody PersonDetailsDTO personDTO) {
+    public ResponseEntity<UUID> insertPerson(@Valid @RequestBody PersonDetailsDTO personDTO) {
         UUID personID = personService.insert(personDTO);
         return new ResponseEntity<>(personID, HttpStatus.CREATED);
     }
@@ -53,6 +55,20 @@ public class PersonController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deletePerson(@PathVariable("id") UUID personId){
+        personService.delete(personId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Transactional
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> updatePerson(@PathVariable("id") UUID personId,
+                                          @RequestBody UpdatePersonDTO updatePersonDTO){
+        Device dto = personService.update(personId, updatePersonDTO.getName(), updatePersonDTO.getAddress());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+
+    }
     //TODO: UPDATE, DELETE per resource
 
 }
